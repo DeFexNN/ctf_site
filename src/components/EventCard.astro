@@ -1,0 +1,49 @@
+---
+interface Props {
+  eventName: string;
+  eventSlug: string;
+  writeupCount: number;
+  date: Date;
+  categories: string[];
+}
+
+const { eventName, eventSlug, writeupCount, date, categories } = Astro.props;
+const formattedDate = date.toLocaleDateString('en-US', { year: 'numeric', month: 'short' });
+---
+
+<a
+  href={`${import.meta.env.BASE_URL}ctfs/${eventSlug}`}
+  class="event-card group block glass rounded-xl p-6 border border-glass-border hover:border-neon-blue/40 transition-all duration-300 reveal"
+>
+  <!-- Terminal-style header -->
+  <div class="font-mono text-xs text-text-muted mb-3">
+    <span class="text-neon-green">$</span> cat /events/<span class="text-neon-blue">{eventSlug}</span>
+  </div>
+
+  <!-- Event Name -->
+  <h3 class="font-mono text-lg font-bold text-white mb-3 group-hover:text-neon-blue transition-colors duration-300">
+    {eventName}
+  </h3>
+
+  <!-- Date -->
+  <p class="font-mono text-xs text-text-muted mb-4">
+    {formattedDate}
+  </p>
+
+  <!-- Stats -->
+  <div class="flex items-center gap-4 mb-4">
+    <div class="font-mono text-xs">
+      <span class="text-neon-green">{writeupCount}</span>
+      <span class="text-text-muted"> writeups</span>
+    </div>
+  </div>
+
+  <!-- Category pills -->
+  <div class="flex flex-wrap gap-1.5">
+    {categories.map((cat) => (
+      <span class="font-mono text-[10px] rounded bg-surface-light text-text-muted border border-glass-border" style="padding: 0.25rem 0.6rem;">
+        {cat}
+      </span>
+    ))}
+  </div>
+</a>

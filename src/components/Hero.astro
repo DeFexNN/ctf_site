@@ -1,0 +1,132 @@
+---
+interface Props {
+  name: string;
+  subtitle: string;
+}
+
+const { name, subtitle } = Astro.props;
+---
+
+<section class="relative min-h-[80vh] flex items-center justify-center px-4 md:px-10 overflow-hidden" style="max-width: 100%; width: 100%;">
+  <div class="w-full max-w-4xl mx-auto text-center">
+    <!-- Terminal-style prompt -->
+    <div class="mb-6 font-mono text-sm text-text-muted reveal">
+      <span class="text-neon-green">$</span> whoami
+    </div>
+
+    <!-- Typing effect heading -->
+    <h1
+      id="hero-heading"
+      class="font-mono text-2xl sm:text-4xl md:text-6xl lg:text-7xl font-bold mb-4 leading-tight"
+    >
+      <span class="text-neon-green">Hi, I'm </span>
+      <span
+        id="hero-name"
+        class="glitch text-white inline-block"
+        data-text={name}
+      >
+        {name}
+      </span>
+    </h1>
+
+    <!-- Subtitle with typing animation -->
+    <div class="min-h-[2.5rem] md:min-h-[3rem] mt-4 mb-8">
+      <p
+        id="hero-subtitle"
+        class="font-mono text-xs sm:text-sm md:text-lg text-text-muted typing-cursor inline-block max-w-full"
+      ></p>
+    </div>
+
+    <!-- CTA Buttons -->
+    <div class="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-5 mt-8 reveal">
+      <a
+        href={`${import.meta.env.BASE_URL}ctfs`}
+        class="font-mono text-sm bg-neon-green/10 border border-neon-green/30 text-neon-green rounded-lg hover:bg-neon-green/20 hover:border-neon-green/60 transition-all duration-300 glow-green w-full sm:w-auto text-center"
+        style="padding: 0.75rem 2rem;"
+      >
+        &gt; View CTF Writeups
+      </a>
+      <a
+        href={`${import.meta.env.BASE_URL}blog`}
+        class="font-mono text-sm bg-neon-purple/10 border border-neon-purple/30 text-neon-purple rounded-lg hover:bg-neon-purple/20 hover:border-neon-purple/60 transition-all duration-300 glow-purple w-full sm:w-auto text-center"
+        style="padding: 0.75rem 2rem;"
+      >
+        &gt; Read Blog
+      </a>
+    </div>
+
+    <!-- Stats bar -->
+    <div class="flex items-center justify-center gap-4 sm:gap-8 mt-12 sm:mt-16 reveal">
+      <div class="text-center">
+        <p class="font-mono text-2xl font-bold text-neon-green" id="stat-ctfs">0</p>
+        <p class="font-mono text-xs text-text-muted mt-1">CTFs Played</p>
+      </div>
+      <div class="w-px h-8 bg-glass-border"></div>
+      <div class="text-center">
+        <p class="font-mono text-2xl font-bold text-neon-blue" id="stat-writeups">0</p>
+        <p class="font-mono text-xs text-text-muted mt-1">Writeups</p>
+      </div>
+      <div class="w-px h-8 bg-glass-border"></div>
+      <div class="text-center">
+        <p class="font-mono text-2xl font-bold text-neon-purple" id="stat-flags">0</p>
+        <p class="font-mono text-xs text-text-muted mt-1">Flags Captured</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script define:vars={{ subtitle }}>
+  // Typing animation for subtitle
+  function typeText(element, text, speed = 50) {
+    let i = 0;
+    element.textContent = '';
+    return new Promise((resolve) => {
+      const interval = setInterval(() => {
+        if (i < text.length) {
+          element.textContent += text.charAt(i);
+          i++;
+        } else {
+          clearInterval(interval);
+          resolve();
+        }
+      }, speed);
+    });
+  }
+
+  // Counter animation for stats
+  function animateCounter(el, target, duration = 2000) {
+    const start = 0;
+    const startTime = performance.now();
+    function update(currentTime) {
+      const elapsed = currentTime - startTime;
+      const progress = Math.min(elapsed / duration, 1);
+      const eased = 1 - Math.pow(1 - progress, 3); // ease-out cubic
+      el.textContent = Math.floor(start + (target - start) * eased).toString();
+      if (progress < 1) requestAnimationFrame(update);
+    }
+    requestAnimationFrame(update);
+  }
+
+  function initHero() {
+    const subtitleEl = document.getElementById('hero-subtitle');
+    if (subtitleEl) {
+      setTimeout(() => typeText(subtitleEl, subtitle, 40), 800);
+    }
+
+    // Animate stats
+    setTimeout(() => {
+      const ctfs = document.getElementById('stat-ctfs');
+      const writeups = document.getElementById('stat-writeups');
+      const flags = document.getElementById('stat-flags');
+      if (ctfs) animateCounter(ctfs, 42);
+      if (writeups) animateCounter(writeups, 87);
+      if (flags) animateCounter(flags, 156);
+    }, 1500);
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initHero);
+  } else {
+    initHero();
+  }
+</script>

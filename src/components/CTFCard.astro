@@ -1,0 +1,85 @@
+---
+interface Props {
+  title: string;
+  date: Date;
+  category: string;
+  ctfEvent: string;
+  tags: string[];
+  points?: number;
+  isSolved: boolean;
+  slug: string;
+  eventSlug: string;
+}
+
+const { title, date, category, ctfEvent, tags, points, isSolved, slug, eventSlug } = Astro.props;
+
+const categoryColors: Record<string, string> = {
+  Reverse: 'text-neon-purple border-neon-purple/30 bg-neon-purple/10',
+  Pwn: 'text-neon-pink border-neon-pink/30 bg-neon-pink/10',
+  Web: 'text-neon-blue border-neon-blue/30 bg-neon-blue/10',
+  Crypto: 'text-neon-cyan border-neon-cyan/30 bg-neon-cyan/10',
+  OSINT: 'text-neon-green border-neon-green/30 bg-neon-green/10',
+  Web3: 'text-yellow-400 border-yellow-400/30 bg-yellow-400/10',
+  Forensics: 'text-orange-400 border-orange-400/30 bg-orange-400/10',
+  Misc: 'text-text-muted border-text-muted/30 bg-text-muted/10',
+};
+
+const colorClass = categoryColors[category] || categoryColors.Misc;
+const formattedDate = date.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' });
+const base = import.meta.env.BASE_URL;
+const href = `${base}ctfs/${eventSlug}/${slug}`;
+---
+
+<a
+  href={href}
+  class="ctf-card group block glass rounded-xl p-6 border border-glass-border hover:border-neon-green/40 transition-colors duration-300 reveal"
+  data-category={category}
+>
+  <!-- Header -->
+  <div class="flex items-start justify-between mb-3 gap-3">
+    <span class:list={['font-mono text-xs rounded border shrink-0', colorClass]} style="padding: 0.35rem 0.75rem;">
+      {category}
+    </span>
+    <div class="flex items-center gap-2 shrink-0">
+      {points && (
+        <span class="font-mono text-xs text-text-muted whitespace-nowrap" style="padding: 0.35rem 0.75rem;">
+          {points} pts
+        </span>
+      )}
+      {isSolved ? (
+        <span class="text-neon-green text-xs font-mono whitespace-nowrap" title="Solved" style="padding: 0.35rem 0.75rem;">
+          &#10003; solved
+        </span>
+      ) : (
+        <span class="text-neon-pink text-xs font-mono whitespace-nowrap" title="Unsolved" style="padding: 0.35rem 0.75rem;">
+          &#10007; unsolved
+        </span>
+      )}
+    </div>
+  </div>
+
+  <!-- Title with decrypt effect on hover -->
+  <h3 class="card-title font-mono text-base font-semibold text-white mb-2 group-hover:text-neon-green transition-colors duration-300" title={title}>
+    {title}
+  </h3>
+
+  <!-- Event -->
+  <p class="font-mono text-xs text-text-muted mb-4">
+    <span class="text-neon-blue">&gt;</span> {ctfEvent}
+  </p>
+
+  <!-- Tags -->
+  <div class="flex flex-wrap gap-1.5 mb-4">
+    {tags.slice(0, 4).map((tag) => (
+      <span class="font-mono text-[10px] rounded bg-surface-light text-text-muted border border-glass-border" style="padding: 0.25rem 0.6rem;">
+        #{tag}
+      </span>
+    ))}
+  </div>
+
+  <!-- Date -->
+  <p class="font-mono text-[10px] text-text-muted">
+    {formattedDate}
+  </p>
+</a>
+

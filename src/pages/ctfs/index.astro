@@ -1,0 +1,68 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import EventCard from '../../components/EventCard.astro';
+import { getCollection } from 'astro:content';
+
+function slugify(str: string): string {
+  return str.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
+}
+
+const allCtfs = (await getCollection('ctfs')).filter((p) => !p.data.draft);
+
+// Group by event
+const eventsMap = new Map<string, typeof allCtfs>();
+for (const post of allCtfs) {
+  const event = post.data.ctf_event;
+  if (!eventsMap.has(event)) eventsMap.set(event, []);
+  eventsMap.get(event)!.push(post);
+}
+
+// Build event summaries, sorted by latest date
+const events = Array.from(eventsMap.entries())
+  .map(([name, posts]) => ({
+    name,
+    slug: slugify(name),
+    writeupCount: posts.length,
+    latestDate: new Date(Math.max(...posts.map((p) => p.data.date.getTime()))),
+    categories: [...new Set(posts.map((p) => p.data.category))],
+  }))
+  .sort((a, b) => b.latestDate.getTime() - a.latestDate.getTime());
+---
+
+<BaseLayout title="CTF Writeups">
+  <section class="max-w-6xl mx-auto px-4 md:px-10 py-12 text-center" style="max-width: 72rem; margin-left: auto; margin-right: auto; width: 100%;">
+    <!-- Header -->
+    <div class="mb-10">
+      <p class="font-mono text-sm text-text-muted mb-2 reveal">
+        <span class="text-neon-blue">$</span> ls ~/ctfs/
+      </p>
+      <h1 class="font-mono text-3xl md:text-4xl font-bold text-white reveal">
+        <span class="text-neon-blue">//</span> CTF Events
+      </h1>
+      <p class="text-text-muted mt-3 reveal">
+        Capture The Flag writeups, grouped by competition.
+      </p>
+    </div>
+
+    <!-- Events Grid -->
+    {events.length > 0 ? (
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 text-left">
+        {events.map((event) => (
+          <EventCard
+            eventName={event.name}
+            eventSlug={event.slug}
+            writeupCount={event.writeupCount}
+            date={event.latestDate}
+            categories={event.categories}
+          />
+        ))}
+      </div>
+    ) : (
+      <div class="glass rounded-xl p-8 text-center border border-glass-border">
+        <p class="font-mono text-sm text-text-muted">
+          <span class="text-neon-blue">$</span> No CTF events yet.
+        </p>
+      </div>
+    )}
+  </section>
+</BaseLayout>

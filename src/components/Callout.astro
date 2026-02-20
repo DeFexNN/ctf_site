@@ -1,0 +1,60 @@
+---
+interface Props {
+  type?: 'warning' | 'danger' | 'info' | 'flag' | 'tip';
+  title?: string;
+}
+
+const { type = 'info', title } = Astro.props;
+
+const styles: Record<string, { border: string; bg: string; icon: string; titleColor: string; label: string }> = {
+  warning: {
+    border: 'border-yellow-400/40',
+    bg: 'bg-yellow-400/5',
+    icon: '⚠',
+    titleColor: 'text-yellow-400',
+    label: 'Warning',
+  },
+  danger: {
+    border: 'border-neon-pink/40',
+    bg: 'bg-neon-pink/5',
+    icon: '☠',
+    titleColor: 'text-neon-pink',
+    label: 'Danger / Exploit',
+  },
+  info: {
+    border: 'border-neon-blue/40',
+    bg: 'bg-neon-blue/5',
+    icon: 'ℹ',
+    titleColor: 'text-neon-blue',
+    label: 'Info',
+  },
+  flag: {
+    border: 'border-neon-green/40',
+    bg: 'bg-neon-green/5',
+    icon: '🚩',
+    titleColor: 'text-neon-green',
+    label: 'Flag',
+  },
+  tip: {
+    border: 'border-neon-purple/40',
+    bg: 'bg-neon-purple/5',
+    icon: '💡',
+    titleColor: 'text-neon-purple',
+    label: 'Tip',
+  },
+};
+
+const s = styles[type] || styles.info;
+---
+
+<div class:list={['callout rounded-lg border-l-4 p-4 my-6', s.border, s.bg]}>
+  <div class="flex items-center gap-2 mb-2">
+    <span class="text-lg">{s.icon}</span>
+    <span class:list={['font-mono text-sm font-semibold', s.titleColor]}>
+      {title || s.label}
+    </span>
+  </div>
+  <div class="text-sm text-text-primary leading-relaxed [&>p]:mb-0">
+    <slot />
+  </div>
+</div>

@@ -1,0 +1,47 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import BlogCard from '../../components/BlogCard.astro';
+import { getCollection } from 'astro:content';
+
+const allPosts = (await getCollection('blog'))
+  .filter((p) => !p.data.draft)
+  .sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
+---
+
+<BaseLayout title="Blog">
+  <section class="max-w-6xl mx-auto px-4 md:px-10 py-12 text-center" style="max-width: 72rem; margin-left: auto; margin-right: auto; width: 100%;">
+    <!-- Header -->
+    <div class="mb-10">
+      <p class="font-mono text-sm text-text-muted mb-2 reveal">
+        <span class="text-neon-purple">$</span> ls ~/blog/
+      </p>
+      <h1 class="font-mono text-3xl md:text-4xl font-bold text-white reveal">
+        <span class="text-neon-purple">//</span> Blog Posts
+      </h1>
+      <p class="text-text-muted mt-3 reveal">
+        Thoughts on security, programming, and tech.
+      </p>
+    </div>
+
+    <!-- Posts -->
+    {allPosts.length > 0 ? (
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 text-left">
+        {allPosts.map((post) => (
+          <BlogCard
+            title={post.data.title}
+            date={post.data.date}
+            description={post.data.description}
+            tags={post.data.tags}
+            slug={post.id}
+          />
+        ))}
+      </div>
+    ) : (
+      <div class="glass rounded-xl p-8 text-center border border-glass-border">
+        <p class="font-mono text-sm text-text-muted">
+          No blog posts yet.
+        </p>
+      </div>
+    )}
+  </section>
+</BaseLayout>

@@ -1,0 +1,131 @@
+---
+import '../styles/global.css';
+import Navbar from '../components/Navbar.astro';
+import Footer from '../components/Footer.astro';
+import MatrixBackground from '../components/MatrixBackground.astro';
+
+interface Props {
+  title: string;
+  description?: string;
+}
+
+const { title, description = 'Cybersecurity Blog & CTF Writeups' } = Astro.props;
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content={description} />
+    <meta name="generator" content={Astro.generator} />
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+
+    <title>{title} | CyberBlog</title>
+  </head>
+  <body class="bg-void text-text-primary font-sans min-h-screen w-full relative">
+    <!-- Animated Background -->
+    <MatrixBackground />
+
+    <!-- Grid Overlay -->
+    <div class="fixed inset-0 grid-bg pointer-events-none z-0" aria-hidden="true"></div>
+
+    <!-- Main Content Shell -->
+    <div class="relative z-10 flex flex-col min-h-screen w-full">
+      <Navbar />
+      <main class="flex-1 w-full flex flex-col items-center">
+        <slot />
+      </main>
+      <Footer />
+    </div>
+
+    <!-- Reveal + Utilities -->
+    <script>
+      // Scroll reveal via native IntersectionObserver — no async delay
+      let revealObserver: IntersectionObserver | null = null;
+
+      function initRevealAnimations() {
+        // Disconnect previous observer if any
+        if (revealObserver) revealObserver.disconnect();
+
+        revealObserver = new IntersectionObserver(
+          (entries) => {
+            entries.forEach((entry) => {
+              if (entry.isIntersecting) {
+                (entry.target as HTMLElement).classList.add('visible');
+                revealObserver!.unobserve(entry.target);
+              }
+            });
+          },
+          { threshold: 0.08 }
+        );
+
+        document.querySelectorAll('.reveal').forEach((el) => {
+          // Reset in case of Astro navigation
+          el.classList.remove('visible');
+          revealObserver!.observe(el);
+        });
+      }
+
+      // Copy-to-clipboard on code blocks
+      function initCopyButtons() {
+        document.querySelectorAll('.prose pre').forEach((pre) => {
+          if (pre.querySelector('.copy-btn')) return;
+          const btn = document.createElement('button');
+          btn.className = 'copy-btn';
+          btn.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>`;
+          btn.style.cssText = `
+            position: absolute; top: 8px; right: 8px;
+            background: rgba(13, 13, 20, 0.8); border: 1px solid rgba(100,100,140,0.2);
+            color: #6b6b80; border-radius: 6px; padding: 6px;
+            cursor: pointer; transition: all 0.2s; z-index: 10;
+          `;
+          btn.addEventListener('mouseenter', () => {
+            btn.style.color = '#00ff41';
+            btn.style.borderColor = 'rgba(0,255,65,0.3)';
+          });
+          btn.addEventListener('mouseleave', () => {
+            btn.style.color = '#6b6b80';
+            btn.style.borderColor = 'rgba(100,100,140,0.2)';
+          });
+          btn.addEventListener('click', async () => {
+            const code = pre.querySelector('code');
+            if (code) {
+              await navigator.clipboard.writeText(code.textContent || '');
+              btn.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#00ff41" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>`;
+              setTimeout(() => {
+                btn.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>`;
+              }, 2000);
+            }
+          });
+          (pre as HTMLElement).style.position = 'relative';
+          pre.appendChild(btn);
+        });
+      }
+
+      // Run on DOMContentLoaded for initial load
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', () => {
+          initRevealAnimations();
+          initCopyButtons();
+        });
+      } else {
+        initRevealAnimations();
+        initCopyButtons();
+      }
+
+      // Re-init on Astro page navigation
+      document.addEventListener('astro:page-load', () => {
+        initRevealAnimations();
+        initCopyButtons();
+      });
+    </script>
+  </body>
+</html>

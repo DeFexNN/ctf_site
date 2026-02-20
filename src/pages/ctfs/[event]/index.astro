@@ -1,0 +1,122 @@
+---
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import CTFCard from '../../../components/CTFCard.astro';
+import { getCollection } from 'astro:content';
+
+function slugify(str: string): string {
+  return str.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
+}
+
+export async function getStaticPaths() {
+  function _slugify(s: string): string {
+    return s.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
+  }
+  const allCtfs = await getCollection('ctfs');
+
+  // Unique events
+  const events = [...new Set(allCtfs.map((p) => p.data.ctf_event))];
+
+  return events.map((event) => ({
+    params: { event: _slugify(event) },
+    props: {
+      eventName: event,
+      posts: allCtfs
+        .filter((p) => p.data.ctf_event === event && !p.data.draft)
+        .sort((a, b) => b.data.date.getTime() - a.data.date.getTime()),
+    },
+  }));
+}
+
+interface Props {
+  eventName: string;
+  posts: Awaited<ReturnType<typeof getCollection<'ctfs'>>>;
+}
+
+const { eventName, posts } = Astro.props;
+const eventSlug = slugify(eventName);
+
+// Group posts by category
+const categories = new Map<string, typeof posts>();
+for (const post of posts) {
+  const cat = post.data.category;
+  if (!categories.has(cat)) categories.set(cat, []);
+  categories.get(cat)!.push(post);
+}
+
+const categoryOrder = ['Reverse', 'Pwn', 'Web', 'Crypto', 'OSINT', 'Web3', 'Forensics', 'Misc'];
+const sortedCategories = [...categories.entries()].sort(
+  (a, b) => categoryOrder.indexOf(a[0]) - categoryOrder.indexOf(b[0])
+);
+
+// Stats
+const totalSolved = posts.filter((p) => p.data.is_solved).length;
+const totalPoints = posts.reduce((sum, p) => sum + (p.data.points || 0), 0);
+---
+
+<BaseLayout title={`${eventName} | CTFs`}>
+  <section class="max-w-6xl w-full mx-auto px-4 md:px-10 py-12" style="max-width: 72rem; margin-left: auto; margin-right: auto; width: 100%;">
+    <!-- Breadcrumb -->
+    <nav class="font-mono text-xs text-text-muted mb-6 reveal">
+      <a href={`${import.meta.env.BASE_URL}`} class="hover:text-neon-green transition-colors">~</a>
+      <span class="mx-1">/</span>
+      <a href={`${import.meta.env.BASE_URL}ctfs`} class="hover:text-neon-blue transition-colors">ctfs</a>
+      <span class="mx-1">/</span>
+      <span class="text-neon-blue">{eventSlug}</span>
+    </nav>
+
+    <!-- Event Dashboard Header -->
+    <div class="mb-10 reveal">
+      <p class="font-mono text-sm text-text-muted mb-2">
+        <span class="text-neon-green">$</span> cat /events/{eventSlug}/README.md
+      </p>
+      <h1 class="font-mono text-3xl md:text-4xl font-bold text-white mb-4">
+        {eventName}
+      </h1>
+
+      <!-- Stats Bar -->
+      <div class="flex flex-wrap items-center gap-6 glass rounded-lg p-4 border border-glass-border">
+        <div class="font-mono text-sm">
+          <span class="text-neon-green">{totalSolved}</span>
+          <span class="text-text-muted">/{posts.length} solved</span>
+        </div>
+        <div class="w-px h-6 bg-glass-border"></div>
+        <div class="font-mono text-sm">
+          <span class="text-neon-blue">{totalPoints}</span>
+          <span class="text-text-muted"> total points</span>
+        </div>
+        <div class="w-px h-6 bg-glass-border"></div>
+        <div class="font-mono text-sm">
+          <span class="text-neon-purple">{sortedCategories.length}</span>
+          <span class="text-text-muted"> categories</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Challenges by Category -->
+    {sortedCategories.map(([category, catPosts]) => (
+      <div class="mb-12">
+        <h2 class="font-mono text-lg font-bold text-white mb-4 reveal">
+          <span class="text-neon-green">&gt;</span> {category}
+          <span class="text-text-muted text-sm font-normal ml-2">
+            ({catPosts.length} challenge{catPosts.length !== 1 ? 's' : ''})
+          </span>
+        </h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          {catPosts.map((post) => (
+            <CTFCard
+              title={post.data.title}
+              date={post.data.date}
+              category={post.data.category}
+              ctfEvent={post.data.ctf_event}
+              tags={post.data.tags}
+              points={post.data.points}
+              isSolved={post.data.is_solved}
+              slug={post.id}
+              eventSlug={eventSlug}
+            />
+          ))}
+        </div>
+      </div>
+    ))}
+  </section>
+</BaseLayout>

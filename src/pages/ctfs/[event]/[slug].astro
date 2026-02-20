@@ -1,0 +1,127 @@
+---
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import TableOfContents from '../../../components/TableOfContents.astro';
+import { getCollection, render } from 'astro:content';
+
+function slugify(str: string): string {
+  return str.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
+}
+
+export async function getStaticPaths() {
+  function _slugify(s: string): string {
+    return s.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
+  }
+  const allCtfs = await getCollection('ctfs');
+
+  return allCtfs.map((post) => ({
+    params: {
+      event: _slugify(post.data.ctf_event),
+      slug: post.id,
+    },
+    props: { post },
+  }));
+}
+
+const { post } = Astro.props;
+const { Content, headings } = await render(post);
+const eventSlug = slugify(post.data.ctf_event);
+
+const formattedDate = post.data.date.toLocaleDateString('en-US', {
+  year: 'numeric',
+  month: 'long',
+  day: 'numeric',
+});
+
+const categoryColors: Record<string, string> = {
+  Reverse: 'text-neon-purple border-neon-purple/30 bg-neon-purple/10',
+  Pwn: 'text-neon-pink border-neon-pink/30 bg-neon-pink/10',
+  Web: 'text-neon-blue border-neon-blue/30 bg-neon-blue/10',
+  Crypto: 'text-neon-cyan border-neon-cyan/30 bg-neon-cyan/10',
+  OSINT: 'text-neon-green border-neon-green/30 bg-neon-green/10',
+  Web3: 'text-yellow-400 border-yellow-400/30 bg-yellow-400/10',
+  Forensics: 'text-orange-400 border-orange-400/30 bg-orange-400/10',
+  Misc: 'text-text-muted border-text-muted/30 bg-text-muted/10',
+};
+const colorClass = categoryColors[post.data.category] || categoryColors.Misc;
+---
+
+<BaseLayout title={`${post.data.title} | ${post.data.ctf_event}`} description={post.data.description}>
+  <article class="max-w-6xl w-full mx-auto px-4 md:px-10 py-12" style="max-width: 72rem; margin-left: auto; margin-right: auto; width: 100%;">
+    <div class="flex flex-col lg:flex-row gap-10">
+      <!-- Main Content -->
+      <div class="flex-1 min-w-0">
+        <!-- Breadcrumb -->
+        <nav class="font-mono text-xs text-text-muted mb-6 reveal">
+          <a href={`${import.meta.env.BASE_URL}`} class="hover:text-neon-green transition-colors">~</a>
+          <span class="mx-1">/</span>
+          <a href={`${import.meta.env.BASE_URL}ctfs`} class="hover:text-neon-blue transition-colors">ctfs</a>
+          <span class="mx-1">/</span>
+          <a href={`${import.meta.env.BASE_URL}ctfs/${eventSlug}`} class="hover:text-neon-blue transition-colors">{eventSlug}</a>
+          <span class="mx-1">/</span>
+          <span class="text-neon-green">{post.id}</span>
+        </nav>
+
+        <!-- Header -->
+        <header class="mb-10 reveal">
+          <div class="flex items-center gap-3 mb-4">
+            <span class:list={['font-mono text-xs rounded border', colorClass]} style="padding: 0.35rem 0.75rem;">
+              {post.data.category}
+            </span>
+            {post.data.points && (
+              <span class="font-mono text-xs text-text-muted">{post.data.points} pts</span>
+            )}
+            {post.data.difficulty && (
+              <span class="font-mono text-xs text-text-muted">// {post.data.difficulty}</span>
+            )}
+          </div>
+
+          <h1 class="font-mono text-3xl md:text-4xl font-bold text-white mb-3">
+            {post.data.title}
+          </h1>
+
+          <div class="flex flex-wrap items-center gap-4 font-mono text-xs text-text-muted mb-4">
+            <span>{post.data.ctf_event}</span>
+            <span class="text-glass-border">|</span>
+            <time>{formattedDate}</time>
+          </div>
+
+          {post.data.tags.length > 0 && (
+            <div class="flex flex-wrap gap-1.5">
+              {post.data.tags.map((tag) => (
+                <span class="font-mono text-[10px] rounded bg-surface-light text-text-muted border border-glass-border" style="padding: 0.25rem 0.6rem;">
+                  #{tag}
+                </span>
+              ))}
+            </div>
+          )}
+        </header>
+
+        <!-- Article Body -->
+        <div class="prose max-w-none">
+          <Content />
+        </div>
+
+        <!-- Navigation Footer -->
+        <div class="mt-16 pt-8 border-t border-glass-border flex items-center justify-between">
+          <a
+            href={`${import.meta.env.BASE_URL}ctfs/${eventSlug}`}
+            class="font-mono text-sm text-text-muted hover:text-neon-blue transition-colors"
+          >
+            &lt; Back to {post.data.ctf_event}
+          </a>
+          <a
+            href={`${import.meta.env.BASE_URL}ctfs`}
+            class="font-mono text-sm text-text-muted hover:text-neon-green transition-colors"
+          >
+            All Events &gt;
+          </a>
+        </div>
+      </div>
+
+      <!-- Sidebar: Table of Contents -->
+      <aside class="hidden lg:block w-64 shrink-0">
+        <TableOfContents headings={headings} />
+      </aside>
+    </div>
+  </article>
+</BaseLayout>

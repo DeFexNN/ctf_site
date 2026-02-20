@@ -1,0 +1,76 @@
+---
+// Matrix rain / digital grid animated background
+---
+
+<canvas id="matrix-canvas" class="fixed inset-0 z-0 pointer-events-none" aria-hidden="true"></canvas>
+
+<script>
+  function initMatrix() {
+    const canvas = document.getElementById('matrix-canvas') as HTMLCanvasElement;
+    if (!canvas) return;
+
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+
+    let width = (canvas.width = window.innerWidth);
+    let height = (canvas.height = window.innerHeight);
+
+    const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789@#$%^&*()_+-=[]{}|;:,.<>?/~`';
+    const fontSize = 14;
+    const columns = Math.floor(width / fontSize);
+    const drops: number[] = new Array(columns).fill(1);
+
+    // Randomize initial positions
+    for (let i = 0; i < drops.length; i++) {
+      drops[i] = Math.random() * -100;
+    }
+
+    function draw() {
+      // Semi-transparent black to create trail effect
+      ctx!.fillStyle = 'rgba(5, 5, 5, 0.06)';
+      ctx!.fillRect(0, 0, width, height);
+
+      ctx!.fillStyle = 'rgba(0, 255, 65, 0.08)';
+      ctx!.font = `${fontSize}px monospace`;
+
+      for (let i = 0; i < drops.length; i++) {
+        const char = chars[Math.floor(Math.random() * chars.length)];
+        const x = i * fontSize;
+        const y = drops[i] * fontSize;
+
+        ctx!.fillText(char, x, y);
+
+        // Reset drops randomly
+        if (y > height && Math.random() > 0.975) {
+          drops[i] = 0;
+        }
+        drops[i]++;
+      }
+    }
+
+    let animId: number;
+    function loop() {
+      draw();
+      animId = requestAnimationFrame(loop);
+    }
+
+    loop();
+
+    window.addEventListener('resize', () => {
+      width = canvas.width = window.innerWidth;
+      height = canvas.height = window.innerHeight;
+    });
+
+    // Cleanup on navigation
+    document.addEventListener('astro:before-swap', () => {
+      cancelAnimationFrame(animId);
+    });
+  }
+
+  // Init on load
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initMatrix);
+  } else {
+    initMatrix();
+  }
+</script>

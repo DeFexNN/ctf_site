@@ -1,0 +1,132 @@
+---
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+const navLinks = [
+  { href: `${base}/`, label: '~/home' },
+  { href: `${base}/blog`, label: '~/blog' },
+  { href: `${base}/ctfs`, label: '~/ctfs' },
+];
+
+const currentPath = Astro.url.pathname;
+// Strip base prefix for simpler matching
+const path = currentPath.replace(base, '') || '/';
+---
+
+<header class="fixed top-0 left-0 right-0 z-50 glass border-b border-glass-border">
+  <nav class="px-4 md:px-10 py-4 flex justify-between items-center md:grid md:grid-cols-3" style="max-width: 72rem; width: 100%; margin-left: auto; margin-right: auto;">
+    <!-- Logo (left) -->
+    <a
+      href={`${base}/`}
+      class="font-mono font-bold text-lg text-neon-green tracking-wider hover:text-neon-cyan transition-colors duration-300 group justify-self-start"
+    >
+      <span class="text-text-muted group-hover:text-neon-green transition-colors">&gt;</span>
+      cyber<span class="text-neon-blue">_</span>blog
+      <span class="inline-block w-2 h-5 bg-neon-green ml-1 animate-pulse align-middle"></span>
+    </a>
+
+    <!-- Desktop Navigation: blog | home | ctfs (centered) -->
+    <ul class="hidden md:flex items-center justify-center gap-8">
+      <li>
+        <a
+          href={`${base}/blog`}
+          class:list={[
+            'font-mono text-sm tracking-wide transition-all duration-300 relative',
+            path.startsWith('/blog')
+              ? 'text-neon-green'
+              : 'text-text-muted hover:text-neon-green',
+          ]}
+        >
+          ~/blog
+          {path.startsWith('/blog') && (
+            <span class="absolute -bottom-1 left-0 right-0 h-px bg-neon-green shadow-[0_0_8px_rgba(0,255,65,0.5)]" />
+          )}
+        </a>
+      </li>
+      <li>
+        <a
+          href={`${base}/`}
+          class:list={[
+            'font-mono text-sm tracking-wide transition-all duration-300 relative',
+            path === '/'
+              ? 'text-neon-green'
+              : 'text-text-muted hover:text-neon-green',
+          ]}
+        >
+          ~/home
+          {path === '/' && (
+            <span class="absolute -bottom-1 left-0 right-0 h-px bg-neon-green shadow-[0_0_8px_rgba(0,255,65,0.5)]" />
+          )}
+        </a>
+      </li>
+      <li>
+        <a
+          href={`${base}/ctfs`}
+          class:list={[
+            'font-mono text-sm tracking-wide transition-all duration-300 relative',
+            path.startsWith('/ctfs')
+              ? 'text-neon-green'
+              : 'text-text-muted hover:text-neon-green',
+          ]}
+        >
+          ~/ctfs
+          {path.startsWith('/ctfs') && (
+            <span class="absolute -bottom-1 left-0 right-0 h-px bg-neon-green shadow-[0_0_8px_rgba(0,255,65,0.5)]" />
+          )}
+        </a>
+      </li>
+    </ul>
+
+    <!-- Right column: Mobile Menu Button (or empty spacer on desktop) -->
+    <div class="justify-self-end">
+      <button
+        id="mobile-menu-btn"
+        class="md:hidden text-text-muted hover:text-neon-green transition-colors"
+        aria-label="Toggle menu"
+      >
+      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <line x1="3" y1="12" x2="21" y2="12" />
+        <line x1="3" y1="6" x2="21" y2="6" />
+        <line x1="3" y1="18" x2="21" y2="18" />
+      </svg>
+      </button>
+    </div>
+  </nav>
+
+  <!-- Mobile Menu -->
+  <div id="mobile-menu" class="hidden md:hidden border-t border-glass-border">
+    <ul class="px-6 py-4 space-y-3">
+      {navLinks.map((link) => (
+        <li>
+          <a
+            href={link.href}
+            class:list={[
+              'block font-mono text-sm tracking-wide transition-colors duration-300 py-1',
+              currentPath === link.href || (link.href !== `${base}/` && currentPath.startsWith(link.href))
+                ? 'text-neon-green'
+                : 'text-text-muted hover:text-neon-green',
+            ]}
+          >
+            {link.label}
+          </a>
+        </li>
+      ))}
+    </ul>
+  </div>
+</header>
+
+<!-- Spacer for fixed navbar -->
+<div class="h-16"></div>
+
+<script>
+  function initMobileMenu() {
+    const btn = document.getElementById('mobile-menu-btn');
+    const menu = document.getElementById('mobile-menu');
+    if (!btn || !menu) return;
+
+    btn.addEventListener('click', () => {
+      menu.classList.toggle('hidden');
+    });
+  }
+
+  document.addEventListener('DOMContentLoaded', initMobileMenu);
+  document.addEventListener('astro:page-load', initMobileMenu);
+</script>

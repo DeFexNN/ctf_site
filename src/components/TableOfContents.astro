@@ -1,0 +1,69 @@
+---
+interface Heading {
+  depth: number;
+  slug: string;
+  text: string;
+}
+
+interface Props {
+  headings: Heading[];
+}
+
+const { headings } = Astro.props;
+const filteredHeadings = headings.filter((h) => h.depth >= 2 && h.depth <= 4);
+---
+
+{filteredHeadings.length > 0 && (
+  <nav class="toc glass rounded-xl p-5 border border-glass-border sticky top-24 max-h-[calc(100vh-8rem)] overflow-y-auto">
+    <h4 class="font-mono text-xs text-neon-green mb-4 uppercase tracking-widest">
+      // Table of Contents
+    </h4>
+    <ul class="space-y-2">
+      {filteredHeadings.map((heading) => (
+        <li
+          style={`padding-left: ${(heading.depth - 2) * 12}px`}
+        >
+          <a
+            href={`#${heading.slug}`}
+            class="toc-link font-mono text-xs text-text-muted hover:text-neon-green transition-colors duration-200 block py-0.5 border-l-2 border-transparent hover:border-neon-green pl-3"
+            data-heading={heading.slug}
+          >
+            {heading.text}
+          </a>
+        </li>
+      ))}
+    </ul>
+  </nav>
+)}
+
+<script>
+  function initTocHighlight() {
+    const tocLinks = document.querySelectorAll('.toc-link');
+    if (tocLinks.length === 0) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            const id = entry.target.id;
+            tocLinks.forEach((link) => {
+              const isActive = link.getAttribute('data-heading') === id;
+              link.classList.toggle('text-neon-green', isActive);
+              link.classList.toggle('border-neon-green', isActive);
+              link.classList.toggle('text-text-muted', !isActive);
+              link.classList.toggle('border-transparent', !isActive);
+            });
+          }
+        });
+      },
+      { rootMargin: '-80px 0px -60% 0px', threshold: 0.1 }
+    );
+
+    document.querySelectorAll('h2[id], h3[id], h4[id]').forEach((heading) => {
+      observer.observe(heading);
+    });
+  }
+
+  document.addEventListener('DOMContentLoaded', initTocHighlight);
+  document.addEventListener('astro:page-load', initTocHighlight);
+</script>

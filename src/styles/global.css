@@ -1,0 +1,300 @@
+@import "tailwindcss";
+
+/* ── Custom Theme ──────────────────────────────────────────────── */
+@theme {
+  --color-void: #050505;
+  --color-void-light: #0a0a0f;
+  --color-surface: #0d0d14;
+  --color-surface-light: #14141e;
+  --color-neon-green: #00ff41;
+  --color-neon-purple: #bf00ff;
+  --color-neon-blue: #00d4ff;
+  --color-neon-pink: #ff0080;
+  --color-neon-cyan: #00ffc8;
+  --color-text-primary: #e0e0e8;
+  --color-text-muted: #6b6b80;
+  --color-glass: rgba(13, 13, 20, 0.6);
+  --color-glass-border: rgba(100, 100, 140, 0.15);
+
+  --font-mono: 'JetBrains Mono', 'Fira Code', ui-monospace, monospace;
+  --font-sans: 'Inter', ui-sans-serif, system-ui, sans-serif;
+}
+
+/* ── Base Styles ───────────────────────────────────────────────── */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+  background-color: var(--color-void);
+  color: var(--color-text-primary);
+  font-family: var(--font-sans);
+  width: 100%;
+  overflow-x: hidden;
+}
+
+body {
+  min-height: 100vh;
+  width: 100%;
+  overflow-x: hidden;
+  background-color: var(--color-void);
+}
+
+/* Force centering on main and its children */
+main {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+}
+
+main > * {
+  width: 100%;
+  max-width: 72rem;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* ── Global Text Spacing ────────────────────────────────────────── */
+/* Cards: ensure no text clipping */
+.ctf-card,
+.blog-card,
+.event-card {
+  overflow: visible;
+}
+
+::selection {
+  background-color: rgba(0, 255, 65, 0.25);
+  color: var(--color-neon-green);
+}
+
+/* ── Scrollbar ─────────────────────────────────────────────────── */
+::-webkit-scrollbar {
+  width: 6px;
+}
+::-webkit-scrollbar-track {
+  background: var(--color-void);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--color-neon-green);
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-neon-blue);
+}
+
+/* ── Glassmorphism Utility ─────────────────────────────────────── */
+.glass {
+  background: var(--color-glass);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid var(--color-glass-border);
+}
+
+/* ── Neon Glow Effects ─────────────────────────────────────────── */
+.glow-green {
+  box-shadow: 0 0 15px rgba(0, 255, 65, 0.15), 0 0 40px rgba(0, 255, 65, 0.05);
+}
+.glow-purple {
+  box-shadow: 0 0 15px rgba(191, 0, 255, 0.15), 0 0 40px rgba(191, 0, 255, 0.05);
+}
+.glow-blue {
+  box-shadow: 0 0 15px rgba(0, 212, 255, 0.15), 0 0 40px rgba(0, 212, 255, 0.05);
+}
+.glow-green-strong {
+  box-shadow: 0 0 20px rgba(0, 255, 65, 0.3), 0 0 60px rgba(0, 255, 65, 0.1);
+}
+
+/* ── Glitch Effect ─────────────────────────────────────────────── */
+@keyframes glitch-1 {
+  0%, 100% { clip-path: inset(40% 0 61% 0); transform: translate(-2px, 2px); }
+  20% { clip-path: inset(92% 0 1% 0); transform: translate(1px, -1px); }
+  40% { clip-path: inset(43% 0 1% 0); transform: translate(-1px, 3px); }
+  60% { clip-path: inset(25% 0 58% 0); transform: translate(3px, 1px); }
+  80% { clip-path: inset(54% 0 7% 0); transform: translate(-3px, -2px); }
+}
+@keyframes glitch-2 {
+  0%, 100% { clip-path: inset(76% 0 1% 0); transform: translate(2px, -1px); }
+  20% { clip-path: inset(13% 0 58% 0); transform: translate(-1px, 2px); }
+  40% { clip-path: inset(1% 0 92% 0); transform: translate(1px, -3px); }
+  60% { clip-path: inset(67% 0 4% 0); transform: translate(-2px, 1px); }
+  80% { clip-path: inset(30% 0 28% 0); transform: translate(3px, 2px); }
+}
+
+.glitch {
+  position: relative;
+}
+.glitch::before,
+.glitch::after {
+  content: attr(data-text);
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+.glitch::before {
+  color: var(--color-neon-blue);
+  animation: glitch-1 2.5s infinite linear alternate-reverse;
+  z-index: -1;
+}
+.glitch::after {
+  color: var(--color-neon-pink);
+  animation: glitch-2 2.5s infinite linear alternate-reverse;
+  z-index: -1;
+}
+
+/* ── Typing Cursor ─────────────────────────────────────────────── */
+@keyframes blink-caret {
+  0%, 100% { border-color: var(--color-neon-green); }
+  50% { border-color: transparent; }
+}
+.typing-cursor {
+  border-right: 3px solid var(--color-neon-green);
+  animation: blink-caret 0.8s step-end infinite;
+}
+
+/* ── Grid Background ───────────────────────────────────────────── */
+.grid-bg {
+  background-image:
+    linear-gradient(rgba(0, 255, 65, 0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0, 255, 65, 0.03) 1px, transparent 1px);
+  background-size: 60px 60px;
+}
+
+/* ── Prose Overrides for Writeup Content ───────────────────────── */
+.prose {
+  color: var(--color-text-primary);
+  line-height: 1.8;
+  font-size: 1.05rem;
+}
+.prose h1, .prose h2, .prose h3, .prose h4 {
+  font-family: var(--font-mono);
+  color: var(--color-neon-green);
+  margin-top: 2em;
+  margin-bottom: 0.75em;
+  font-weight: 700;
+}
+.prose h1 { font-size: 2rem; }
+.prose h2 {
+  font-size: 1.5rem;
+  padding-bottom: 0.3em;
+  border-bottom: 1px solid var(--color-glass-border);
+}
+.prose h3 { font-size: 1.25rem; color: var(--color-neon-blue); }
+.prose h4 { font-size: 1.1rem; color: var(--color-neon-purple); }
+
+.prose p { margin-bottom: 1.25em; }
+.prose a {
+  color: var(--color-neon-cyan);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  transition: color 0.2s;
+}
+.prose a:hover { color: var(--color-neon-green); }
+
+.prose strong { color: #ffffff; font-weight: 600; }
+.prose em { color: var(--color-text-muted); }
+
+.prose ul, .prose ol {
+  padding-left: 1.5em;
+  margin-bottom: 1.25em;
+}
+.prose li { margin-bottom: 0.4em; }
+.prose li::marker { color: var(--color-neon-green); }
+
+.prose blockquote {
+  border-left: 3px solid var(--color-neon-purple);
+  padding: 0.75em 1em;
+  margin: 1.5em 0;
+  background: rgba(191, 0, 255, 0.05);
+  border-radius: 0 6px 6px 0;
+  color: var(--color-text-muted);
+}
+
+.prose img {
+  border-radius: 8px;
+  border: 1px solid var(--color-glass-border);
+  margin: 1.5em 0;
+}
+
+.prose table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 1.5em 0;
+}
+.prose th, .prose td {
+  border: 1px solid var(--color-glass-border);
+  padding: 0.6em 1em;
+  text-align: left;
+}
+.prose th {
+  background: var(--color-surface-light);
+  font-family: var(--font-mono);
+  font-size: 0.9rem;
+  color: var(--color-neon-green);
+}
+
+.prose hr {
+  border: none;
+  border-top: 1px solid var(--color-glass-border);
+  margin: 2em 0;
+}
+
+/* ── Code Blocks ───────────────────────────────────────────────── */
+.prose pre {
+  position: relative;
+  background: var(--color-surface) !important;
+  border: 1px solid var(--color-glass-border);
+  border-radius: 8px;
+  padding: 1.25em 1.5em;
+  margin: 1.5em 0;
+  overflow-x: auto;
+  font-family: var(--font-mono);
+  font-size: 0.875rem;
+  line-height: 1.7;
+}
+.prose code {
+  font-family: var(--font-mono);
+  font-size: 0.875em;
+}
+.prose :not(pre) > code {
+  background: var(--color-surface-light);
+  padding: 0.15em 0.4em;
+  border-radius: 4px;
+  color: var(--color-neon-cyan);
+  border: 1px solid var(--color-glass-border);
+}
+
+/* ── Heading anchor links ──────────────────────────────────────── */
+.heading-link {
+  text-decoration: none;
+  color: inherit;
+}
+.heading-link:hover {
+  color: inherit;
+  text-decoration: none;
+}
+
+/* ── Scroll reveal utility ─────────────────────────────────────── */
+.reveal {
+  opacity: 0;
+  transform: translateY(24px);
+  transition: opacity 0.5s ease-out, transform 0.5s ease-out;
+}
+.reveal.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ── Page transition ───────────────────────────────────────────── */
+@keyframes fadeSlideIn {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.page-enter {
+  animation: fadeSlideIn 0.4s ease-out forwards;
+}

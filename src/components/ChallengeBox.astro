@@ -1,0 +1,18 @@
+---
+interface Props {
+  label?: string;
+}
+
+const { label } = Astro.props;
+---
+
+<div class="challenge-box glass rounded-xl p-5 my-6 border border-glass-border">
+  {label && (
+    <div class="font-mono text-xs text-neon-green mb-3 uppercase tracking-widest">
+      // {label}
+    </div>
+  )}
+  <div class="text-sm [&>p]:mb-2 [&>p:last-child]:mb-0">
+    <slot />
+  </div>
+</div>
