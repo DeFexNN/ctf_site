@@ -6,7 +6,6 @@ challenge_name: "tuff_game"
 category: "Misc"
 tags: ["unity", "cheat-engine", "asset-ripper", "bepinex", "qr-code", "python"]
 points: 241
-is_solved: true
 difficulty: "Medium"
 description: "A Unity Mono game that hides its flag behind a million-metre score requirement and a deprecated in-game QR code scattered across the asset bundle as tiles."
 draft: false

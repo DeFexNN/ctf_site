@@ -9,11 +9,11 @@ interface Props {
   description?: string;
 }
 
-const { title, description = 'Cybersecurity Blog & CTF Writeups' } = Astro.props;
+const { title, description = '518&imposter — CTF Team Blog & Writeups' } = Astro.props;
 ---
 
 <!doctype html>
-<html lang="en">
+<html lang="en" style="scroll-behavior: smooth;">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -28,7 +28,7 @@ const { title, description = 'Cybersecurity Blog & CTF Writeups' } = Astro.props
       rel="stylesheet"
     />
 
-    <title>{title} | CyberBlog</title>
+    <title>{title} | 518 Blog</title>
   </head>
   <body class="bg-void text-text-primary font-sans min-h-screen w-full relative">
     <!-- Animated Background -->

@@ -6,12 +6,11 @@ interface Props {
   ctfEvent: string;
   tags: string[];
   points?: number;
-  isSolved: boolean;
   slug: string;
   eventSlug: string;
 }
 
-const { title, date, category, ctfEvent, tags, points, isSolved, slug, eventSlug } = Astro.props;
+const { title, date, category, ctfEvent, tags, points, slug, eventSlug } = Astro.props;
 
 const categoryColors: Record<string, string> = {
   Reverse: 'text-neon-purple border-neon-purple/30 bg-neon-purple/10',
@@ -44,15 +43,6 @@ const href = `${base}ctfs/${eventSlug}/${slug}`;
       {points && (
         <span class="font-mono text-xs text-text-muted whitespace-nowrap" style="padding: 0.35rem 0.75rem;">
           {points} pts
-        </span>
-      )}
-      {isSolved ? (
-        <span class="text-neon-green text-xs font-mono whitespace-nowrap" title="Solved" style="padding: 0.35rem 0.75rem;">
-          &#10003; solved
-        </span>
-      ) : (
-        <span class="text-neon-pink text-xs font-mono whitespace-nowrap" title="Unsolved" style="padding: 0.35rem 0.75rem;">
-          &#10007; unsolved
         </span>
       )}
     </div>

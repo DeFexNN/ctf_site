@@ -4,6 +4,7 @@ const navLinks = [
   { href: `${base}/`, label: '~/home' },
   { href: `${base}/blog`, label: '~/blog' },
   { href: `${base}/ctfs`, label: '~/ctfs' },
+  { href: `${base}/docs`, label: '~/docs' },
 ];
 
 const currentPath = Astro.url.pathname;
@@ -19,7 +20,7 @@ const path = currentPath.replace(base, '') || '/';
       class="font-mono font-bold text-lg text-neon-green tracking-wider hover:text-neon-cyan transition-colors duration-300 group justify-self-start"
     >
       <span class="text-text-muted group-hover:text-neon-green transition-colors">&gt;</span>
-      cyber<span class="text-neon-blue">_</span>blog
+      518<span class="text-neon-blue"> </span>blog
       <span class="inline-block w-2 h-5 bg-neon-green ml-1 animate-pulse align-middle"></span>
     </a>
 
@@ -69,6 +70,22 @@ const path = currentPath.replace(base, '') || '/';
         >
           ~/ctfs
           {path.startsWith('/ctfs') && (
+            <span class="absolute -bottom-1 left-0 right-0 h-px bg-neon-green shadow-[0_0_8px_rgba(0,255,65,0.5)]" />
+          )}
+        </a>
+      </li>
+      <li>
+        <a
+          href={`${base}/docs`}
+          class:list={[
+            'font-mono text-sm tracking-wide transition-all duration-300 relative',
+            path.startsWith('/docs')
+              ? 'text-neon-green'
+              : 'text-text-muted hover:text-neon-green',
+          ]}
+        >
+          ~/docs
+          {path.startsWith('/docs') && (
             <span class="absolute -bottom-1 left-0 right-0 h-px bg-neon-green shadow-[0_0_8px_rgba(0,255,65,0.5)]" />
           )}
         </a>

@@ -81,6 +81,12 @@ const colorClass = categoryColors[post.data.category] || categoryColors.Misc;
 
           <div class="flex flex-wrap items-center gap-4 font-mono text-xs text-text-muted mb-4">
             <span>{post.data.ctf_event}</span>
+            {post.data.author && (
+              <>
+                <span class="text-glass-border">|</span>
+                <span>by <span class="text-neon-cyan">{post.data.author}</span></span>
+              </>
+            )}
             <span class="text-glass-border">|</span>
             <time>{formattedDate}</time>
           </div>
@@ -119,7 +125,7 @@ const colorClass = categoryColors[post.data.category] || categoryColors.Misc;
       </div>
 
       <!-- Sidebar: Table of Contents -->
-      <aside class="hidden lg:block w-64 shrink-0">
+      <aside class="hidden lg:block w-64 shrink-0 sticky top-24 self-start max-h-[calc(100vh-8rem)]">
         <TableOfContents headings={headings} />
       </aside>
     </div>

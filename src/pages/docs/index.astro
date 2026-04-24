@@ -1,0 +1,331 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+---
+
+<BaseLayout title="Docs" description="Documentation for writing CTF writeups on 518&imposter blog">
+  <section class="max-w-4xl mx-auto px-4 md:px-10 py-12" style="max-width: 56rem; margin-left: auto; margin-right: auto; width: 100%;">
+    <!-- Header -->
+    <div class="mb-10">
+      <p class="font-mono text-sm text-text-muted mb-2 reveal">
+        <span class="text-neon-cyan">$</span> cat ~/docs/README.md
+      </p>
+      <h1 class="font-mono text-3xl md:text-4xl font-bold text-white reveal">
+        <span class="text-neon-cyan">//</span> Docs
+      </h1>
+      <p class="text-text-muted mt-3 reveal">
+        How to write and format CTF writeups for the 518&imposter blog.
+      </p>
+    </div>
+
+    <!-- Frontmatter Section -->
+    <div class="glass rounded-xl p-6 border border-glass-border mb-8 reveal">
+      <h2 class="font-mono text-xl font-bold text-neon-green mb-4">
+        <span class="text-text-muted">#</span> Frontmatter (YAML Header)
+      </h2>
+      <p class="text-text-muted text-sm mb-4">
+        Every <code class="text-neon-cyan bg-surface-light rounded px-1.5 py-0.5">.md</code> file starts with a YAML block between
+        <code class="text-neon-cyan bg-surface-light rounded px-1.5 py-0.5">---</code> markers. This is how the site knows the title, author, category, etc.
+      </p>
+
+      <div class="relative">
+        <div class="font-mono text-xs text-text-muted mb-2 flex items-center gap-2">
+          <span class="text-neon-green">$</span> cat frontmatter-example.yaml
+        </div>
+        <pre class="bg-[#0d0d14] rounded-lg border border-glass-border p-4 overflow-x-auto"><code class="font-mono text-sm leading-relaxed"><span class="text-text-muted">---</span>
+<span class="text-neon-purple">title</span><span class="text-text-muted">:</span> <span class="text-neon-green">"SQL Injection in Login Panel"</span>
+<span class="text-neon-purple">date</span><span class="text-text-muted">:</span> <span class="text-white">2026-04-20</span>
+<span class="text-neon-purple">ctf_event</span><span class="text-text-muted">:</span> <span class="text-neon-green">"BITSCTF 2026"</span>
+<span class="text-neon-purple">challenge_name</span><span class="text-text-muted">:</span> <span class="text-neon-green">"login_bypass"</span>
+<span class="text-neon-purple">category</span><span class="text-text-muted">:</span> <span class="text-neon-green">"Web"</span>
+<span class="text-neon-purple">tags</span><span class="text-text-muted">:</span> <span class="text-white">[</span><span class="text-neon-green">"sql-injection"</span><span class="text-white">,</span> <span class="text-neon-green">"auth-bypass"</span><span class="text-white">,</span> <span class="text-neon-green">"python"</span><span class="text-white">]</span>
+<span class="text-neon-purple">points</span><span class="text-text-muted">:</span> <span class="text-neon-blue">300</span>
+<span class="text-neon-purple">difficulty</span><span class="text-text-muted">:</span> <span class="text-neon-green">"Medium"</span>
+<span class="text-neon-purple">description</span><span class="text-text-muted">:</span> <span class="text-neon-green">"Bypass authentication via SQL injection in a custom login form."</span>
+<span class="text-neon-purple">author</span><span class="text-text-muted">:</span> <span class="text-neon-green">"DeFexGG"</span>
+<span class="text-neon-purple">draft</span><span class="text-text-muted">:</span> <span class="text-neon-blue">false</span>
+<span class="text-text-muted">---</span></code></pre>
+      </div>
+    </div>
+
+    <!-- Fields Reference -->
+    <div class="glass rounded-xl p-6 border border-glass-border mb-8 reveal">
+      <h2 class="font-mono text-xl font-bold text-neon-green mb-4">
+        <span class="text-text-muted">#</span> Fields Reference
+      </h2>
+
+      <div class="overflow-x-auto">
+        <table class="w-full font-mono text-sm border-collapse">
+          <thead>
+            <tr class="border-b border-glass-border">
+              <th class="text-left text-neon-cyan py-3 pr-4">Field</th>
+              <th class="text-left text-neon-cyan py-3 pr-4">Type</th>
+              <th class="text-left text-neon-cyan py-3 pr-4">Required</th>
+              <th class="text-left text-neon-cyan py-3">Description</th>
+            </tr>
+          </thead>
+          <tbody class="text-text-muted">
+            <tr class="border-b border-glass-border/50">
+              <td class="py-2.5 pr-4 text-white">title</td>
+              <td class="py-2.5 pr-4 text-neon-purple">string</td>
+              <td class="py-2.5 pr-4"><span class="text-neon-green">✓</span></td>
+              <td class="py-2.5">Title of the writeup</td>
+            </tr>
+            <tr class="border-b border-glass-border/50">
+              <td class="py-2.5 pr-4 text-white">date</td>
+              <td class="py-2.5 pr-4 text-neon-purple">YYYY-MM-DD</td>
+              <td class="py-2.5 pr-4"><span class="text-neon-green">✓</span></td>
+              <td class="py-2.5">Date of the writeup</td>
+            </tr>
+            <tr class="border-b border-glass-border/50">
+              <td class="py-2.5 pr-4 text-white">ctf_event</td>
+              <td class="py-2.5 pr-4 text-neon-purple">string</td>
+              <td class="py-2.5 pr-4"><span class="text-neon-green">✓</span></td>
+              <td class="py-2.5">CTF event name, e.g. "BITSCTF 2026"</td>
+            </tr>
+            <tr class="border-b border-glass-border/50">
+              <td class="py-2.5 pr-4 text-white">challenge_name</td>
+              <td class="py-2.5 pr-4 text-neon-purple">string</td>
+              <td class="py-2.5 pr-4"><span class="text-neon-green">✓</span></td>
+              <td class="py-2.5">Challenge slug, e.g. "login_bypass"</td>
+            </tr>
+            <tr class="border-b border-glass-border/50">
+              <td class="py-2.5 pr-4 text-white">category</td>
+              <td class="py-2.5 pr-4 text-neon-purple">enum</td>
+              <td class="py-2.5 pr-4"><span class="text-neon-green">✓</span></td>
+              <td class="py-2.5">Reverse | Pwn | Web | Crypto | OSINT | Web3 | Forensics | Misc</td>
+            </tr>
+            <tr class="border-b border-glass-border/50">
+              <td class="py-2.5 pr-4 text-white">tags</td>
+              <td class="py-2.5 pr-4 text-neon-purple">string[]</td>
+              <td class="py-2.5 pr-4"><span class="text-text-muted">—</span></td>
+              <td class="py-2.5">Tags for filtering, default: []</td>
+            </tr>
+            <tr class="border-b border-glass-border/50">
+              <td class="py-2.5 pr-4 text-white">points</td>
+              <td class="py-2.5 pr-4 text-neon-purple">number</td>
+              <td class="py-2.5 pr-4"><span class="text-text-muted">—</span></td>
+              <td class="py-2.5">Challenge points</td>
+            </tr>
+            <tr class="border-b border-glass-border/50">
+              <td class="py-2.5 pr-4 text-white">difficulty</td>
+              <td class="py-2.5 pr-4 text-neon-purple">enum</td>
+              <td class="py-2.5 pr-4"><span class="text-text-muted">—</span></td>
+              <td class="py-2.5">Easy | Medium | Hard | Insane</td>
+            </tr>
+            <tr class="border-b border-glass-border/50">
+              <td class="py-2.5 pr-4 text-white">description</td>
+              <td class="py-2.5 pr-4 text-neon-purple">string</td>
+              <td class="py-2.5 pr-4"><span class="text-text-muted">—</span></td>
+              <td class="py-2.5">Short description for SEO and previews</td>
+            </tr>
+            <tr class="border-b border-glass-border/50">
+              <td class="py-2.5 pr-4 text-neon-cyan font-bold">author</td>
+              <td class="py-2.5 pr-4 text-neon-purple">string</td>
+              <td class="py-2.5 pr-4"><span class="text-text-muted">—</span></td>
+              <td class="py-2.5">Your nickname. Shows up under the title</td>
+            </tr>
+            <tr>
+              <td class="py-2.5 pr-4 text-white">draft</td>
+              <td class="py-2.5 pr-4 text-neon-purple">boolean</td>
+              <td class="py-2.5 pr-4"><span class="text-text-muted">—</span></td>
+              <td class="py-2.5">Set to true to hide from site. Default: false</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Markdown Body Section -->
+    <div class="glass rounded-xl p-6 border border-glass-border mb-8 reveal">
+      <h2 class="font-mono text-xl font-bold text-neon-green mb-4">
+        <span class="text-text-muted">#</span> Markdown Body
+      </h2>
+      <p class="text-text-muted text-sm mb-4">
+        After the frontmatter, write your writeup using standard Markdown. Here are the supported elements:
+      </p>
+
+      <div class="space-y-6">
+        <!-- Headings -->
+        <div>
+          <h3 class="font-mono text-sm text-neon-cyan mb-2">Headings</h3>
+          <pre class="bg-[#0d0d14] rounded-lg border border-glass-border p-4 overflow-x-auto"><code class="font-mono text-sm text-text-muted">## Challenge Description      ← h2 (main sections)
+### Step 1 — Recon             ← h3 (sub-sections)
+#### Finding the endpoint      ← h4 (details)</code></pre>
+        </div>
+
+        <!-- Code blocks -->
+        <div>
+          <h3 class="font-mono text-sm text-neon-cyan mb-2">Code Blocks</h3>
+          <pre class="bg-[#0d0d14] rounded-lg border border-glass-border p-4 overflow-x-auto"><code class="font-mono text-sm text-text-muted">```python
+import requests
+
+url = "http://target.ctf/login"
+payload = &#123;"user": "' OR 1=1--", "pass": "x"&#125;
+r = requests.post(url, data=payload)
+print(r.text)
+```</code></pre>
+          <p class="text-text-muted text-xs mt-2">
+            Supported languages: <span class="text-neon-purple">python</span>, <span class="text-neon-purple">javascript</span>, <span class="text-neon-purple">bash</span>, <span class="text-neon-purple">c</span>, <span class="text-neon-purple">rust</span>, <span class="text-neon-purple">sql</span>, <span class="text-neon-purple">html</span>, and many more.
+          </p>
+        </div>
+
+        <!-- Images -->
+        <div>
+          <h3 class="font-mono text-sm text-neon-cyan mb-2">Images</h3>
+          <pre class="bg-[#0d0d14] rounded-lg border border-glass-border p-4 overflow-x-auto"><code class="font-mono text-sm text-text-muted">![screenshot description](screenshot.png)</code></pre>
+          <p class="text-text-muted text-xs mt-2">
+            Put images in the same folder as your <code class="text-neon-cyan bg-surface-light rounded px-1 py-0.5">.md</code> file. Use relative paths.
+          </p>
+        </div>
+
+        <!-- Inline formatting -->
+        <div>
+          <h3 class="font-mono text-sm text-neon-cyan mb-2">Inline Formatting</h3>
+          <pre class="bg-[#0d0d14] rounded-lg border border-glass-border p-4 overflow-x-auto"><code class="font-mono text-sm text-text-muted">**bold text**
+*italic text*
+`inline code`
+[link text](https://example.com)
+~~strikethrough~~</code></pre>
+        </div>
+
+        <!-- Lists -->
+        <div>
+          <h3 class="font-mono text-sm text-neon-cyan mb-2">Lists</h3>
+          <pre class="bg-[#0d0d14] rounded-lg border border-glass-border p-4 overflow-x-auto"><code class="font-mono text-sm text-text-muted">- bullet item 1
+- bullet item 2
+  - nested item
+
+1. numbered step 1
+2. numbered step 2</code></pre>
+        </div>
+
+        <!-- Blockquotes -->
+        <div>
+          <h3 class="font-mono text-sm text-neon-cyan mb-2">Blockquotes</h3>
+          <pre class="bg-[#0d0d14] rounded-lg border border-glass-border p-4 overflow-x-auto"><code class="font-mono text-sm text-text-muted">&gt; This is a quote or hint from the challenge description.</code></pre>
+        </div>
+
+        <!-- Tables (GFM) -->
+        <div>
+          <h3 class="font-mono text-sm text-neon-cyan mb-2">Tables (GFM)</h3>
+          <pre class="bg-[#0d0d14] rounded-lg border border-glass-border p-4 overflow-x-auto"><code class="font-mono text-sm text-text-muted">| Offset | Value  | Meaning   |
+| ------ | ------ | --------- |
+| 0x00   | 0x7f45 | ELF magic |
+| 0x10   | 0x03   | x86_64    |</code></pre>
+        </div>
+      </div>
+    </div>
+
+    <!-- File Structure -->
+    <div class="glass rounded-xl p-6 border border-glass-border mb-8 reveal">
+      <h2 class="font-mono text-xl font-bold text-neon-green mb-4">
+        <span class="text-text-muted">#</span> File Structure
+      </h2>
+      <p class="text-text-muted text-sm mb-4">
+        Place your writeup file and related images in the <code class="text-neon-cyan bg-surface-light rounded px-1.5 py-0.5">src/content/ctfs/</code> folder:
+      </p>
+      <pre class="bg-[#0d0d14] rounded-lg border border-glass-border p-4 overflow-x-auto"><code class="font-mono text-sm leading-relaxed"><span class="text-neon-green">src/content/ctfs/</span>
+├── <span class="text-neon-cyan">My_Challenge.md</span>        ← your writeup
+├── <span class="text-text-muted">screenshot1.png</span>        ← images used inside
+├── <span class="text-text-muted">screenshot2.png</span>
+└── <span class="text-text-muted">exploit.png</span></code></pre>
+      <div class="mt-4 p-3 rounded-lg border border-neon-green/20 bg-neon-green/5">
+        <p class="font-mono text-xs text-neon-green">
+          <span class="text-text-muted">//</span> Tip: The filename (without .md) becomes the URL slug. Use underscores for spaces.
+        </p>
+      </div>
+    </div>
+
+    <!-- Full Example -->
+    <div class="glass rounded-xl p-6 border border-glass-border mb-8 reveal">
+      <h2 class="font-mono text-xl font-bold text-neon-green mb-4">
+        <span class="text-text-muted">#</span> Full Example
+      </h2>
+      <p class="text-text-muted text-sm mb-4">
+        Copy this template as a starting point for your writeup:
+      </p>
+
+      <pre class="bg-[#0d0d14] rounded-lg border border-glass-border p-4 overflow-x-auto"><code class="font-mono text-sm leading-relaxed"><span class="text-text-muted">---</span>
+<span class="text-neon-purple">title</span>: <span class="text-neon-green">"SQL Injection in Login Panel"</span>
+<span class="text-neon-purple">date</span>: <span class="text-white">2026-04-20</span>
+<span class="text-neon-purple">ctf_event</span>: <span class="text-neon-green">"BITSCTF 2026"</span>
+<span class="text-neon-purple">challenge_name</span>: <span class="text-neon-green">"login_bypass"</span>
+<span class="text-neon-purple">category</span>: <span class="text-neon-green">"Web"</span>
+<span class="text-neon-purple">tags</span>: [<span class="text-neon-green">"sql-injection"</span>, <span class="text-neon-green">"auth-bypass"</span>, <span class="text-neon-green">"python"</span>]
+<span class="text-neon-purple">points</span>: <span class="text-neon-blue">300</span>
+<span class="text-neon-purple">difficulty</span>: <span class="text-neon-green">"Medium"</span>
+<span class="text-neon-purple">description</span>: <span class="text-neon-green">"Bypass authentication via SQL injection."</span>
+<span class="text-neon-purple">author</span>: <span class="text-neon-green">"DeFexGG"</span>
+<span class="text-neon-purple">draft</span>: <span class="text-neon-blue">false</span>
+<span class="text-text-muted">---</span>
+
+<span class="text-neon-cyan">## Challenge Description</span>
+
+We're given a login form at <span class="text-neon-green">`http://target.ctf/login`</span>.
+The goal is to get the flag from the admin panel.
+
+<span class="text-neon-cyan">## Initial Analysis</span>
+
+Opening the page we see a login form with a username and
+password field. The source code shows it sends a POST to
+<span class="text-neon-green">`/api/auth`</span>.
+
+<span class="text-neon-cyan">## Step 1 — SQL Injection Discovery</span>
+
+Tried basic SQLi payloads in the username field:
+
+<span class="text-text-muted">```sql</span>
+<span class="text-white">' OR 1=1--</span>
+<span class="text-text-muted">```</span>
+
+This returned a <span class="text-neon-green">**200 OK**</span> with the admin dashboard.
+
+<span class="text-neon-green">![admin dashboard](dashboard.png)</span>
+
+<span class="text-neon-cyan">## Step 2 — Extracting the Flag</span>
+
+On the admin panel we can see the flag in the page source:
+
+<span class="text-text-muted">```html</span>
+<span class="text-white">&lt;!-- flag: CTF&#123;s0m3_fl4g_h3r3&#125; --&gt;</span>
+<span class="text-text-muted">```</span>
+
+<span class="text-neon-cyan">## Flag</span>
+
+<span class="text-neon-green">`CTF&#123;s0m3_fl4g_h3r3&#125;`</span></code></pre>
+    </div>
+
+    <!-- Tips -->
+    <div class="glass rounded-xl p-6 border border-glass-border reveal">
+      <h2 class="font-mono text-xl font-bold text-neon-green mb-4">
+        <span class="text-text-muted">#</span> Tips
+      </h2>
+      <ul class="space-y-3 text-text-muted text-sm">
+        <li class="flex items-start gap-2">
+          <span class="text-neon-green mt-0.5">▸</span>
+          <span>Always include <code class="text-neon-cyan bg-surface-light rounded px-1 py-0.5">author</code> — this way people know who solved it.</span>
+        </li>
+        <li class="flex items-start gap-2">
+          <span class="text-neon-green mt-0.5">▸</span>
+          <span>Use <code class="text-neon-cyan bg-surface-light rounded px-1 py-0.5">draft: true</code> to save work-in-progress writeups without publishing.</span>
+        </li>
+        <li class="flex items-start gap-2">
+          <span class="text-neon-green mt-0.5">▸</span>
+          <span>Keep images small — compress PNGs before committing.</span>
+        </li>
+        <li class="flex items-start gap-2">
+          <span class="text-neon-green mt-0.5">▸</span>
+          <span>Use headings (<code class="text-neon-cyan bg-surface-light rounded px-1 py-0.5">##</code>, <code class="text-neon-cyan bg-surface-light rounded px-1 py-0.5">###</code>) to structure your writeup — they show up in the Table of Contents.</span>
+        </li>
+        <li class="flex items-start gap-2">
+          <span class="text-neon-green mt-0.5">▸</span>
+          <span>End every writeup with a <code class="text-neon-cyan bg-surface-light rounded px-1 py-0.5">## Flag</code> section containing the flag.</span>
+        </li>
+        <li class="flex items-start gap-2">
+          <span class="text-neon-green mt-0.5">▸</span>
+          <span>The <code class="text-neon-cyan bg-surface-light rounded px-1 py-0.5">ctf_event</code> field groups writeups — make sure it matches exactly across all writeups from the same CTF.</span>
+        </li>
+      </ul>
+    </div>
+  </section>
+</BaseLayout>

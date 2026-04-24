@@ -49,7 +49,6 @@ const sortedCategories = [...categories.entries()].sort(
 );
 
 // Stats
-const totalSolved = posts.filter((p) => p.data.is_solved).length;
 const totalPoints = posts.reduce((sum, p) => sum + (p.data.points || 0), 0);
 ---
 
@@ -76,8 +75,8 @@ const totalPoints = posts.reduce((sum, p) => sum + (p.data.points || 0), 0);
       <!-- Stats Bar -->
       <div class="flex flex-wrap items-center gap-6 glass rounded-lg p-4 border border-glass-border">
         <div class="font-mono text-sm">
-          <span class="text-neon-green">{totalSolved}</span>
-          <span class="text-text-muted">/{posts.length} solved</span>
+          <span class="text-neon-green">{posts.length}</span>
+          <span class="text-text-muted"> challenges</span>
         </div>
         <div class="w-px h-6 bg-glass-border"></div>
         <div class="font-mono text-sm">
@@ -110,7 +109,6 @@ const totalPoints = posts.reduce((sum, p) => sum + (p.data.points || 0), 0);
               ctfEvent={post.data.ctf_event}
               tags={post.data.tags}
               points={post.data.points}
-              isSolved={post.data.is_solved}
               slug={post.id}
               eventSlug={eventSlug}
             />

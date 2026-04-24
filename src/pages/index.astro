@@ -25,8 +25,8 @@ function slugify(str: string): string {
 <BaseLayout title="Home">
   <!-- Hero -->
   <Hero
-    name="DeFexGG"
-    subtitle="CTF Player & Security Researcher // Breaking things to learn how they work."
+    name="518&imposter"
+    subtitle="CTF Team // Breaking things to learn how they work."
   />
 
   <!-- Latest CTF Writeups Section -->
@@ -48,7 +48,6 @@ function slugify(str: string): string {
             ctfEvent={post.data.ctf_event}
             tags={post.data.tags}
             points={post.data.points}
-            isSolved={post.data.is_solved}
             slug={post.id}
             eventSlug={slugify(post.data.ctf_event)}
           />

@@ -24,9 +24,9 @@ const ctfs = defineCollection({
     category: categoryEnum,
     tags: z.array(z.string()).default([]),
     points: z.number().optional(),
-    is_solved: z.boolean().default(true),
     difficulty: z.enum(['Easy', 'Medium', 'Hard', 'Insane']).optional(),
     description: z.string().optional(),
+    author: z.string().optional(),
     draft: z.boolean().default(false),
   }),
 });

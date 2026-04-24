@@ -14,11 +14,11 @@ const filteredHeadings = headings.filter((h) => h.depth >= 2 && h.depth <= 4);
 ---
 
 {filteredHeadings.length > 0 && (
-  <nav class="toc glass rounded-xl p-5 border border-glass-border sticky top-24 max-h-[calc(100vh-8rem)] overflow-y-auto">
+  <nav class="toc glass rounded-xl p-5 border border-glass-border">
     <h4 class="font-mono text-xs text-neon-green mb-4 uppercase tracking-widest">
       // Table of Contents
     </h4>
-    <ul class="space-y-2">
+    <ul class="space-y-2 max-h-[calc(100vh-12rem)] overflow-y-auto">
       {filteredHeadings.map((heading) => (
         <li
           style={`padding-left: ${(heading.depth - 2) * 12}px`}
