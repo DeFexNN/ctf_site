@@ -1,7 +1,7 @@
 ---
 title: Osint
 date: 2026-04-28
-ctf_event: UMDCTF2026
+ctf_event: UMDCTF 2026
 challenge_name: osint
 category: OSINT
 tags: [osint, telegram, doxxing]
