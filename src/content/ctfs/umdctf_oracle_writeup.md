@@ -1,7 +1,7 @@
 --- 
 title: UMDCTF - oracle Writeup
 date: 2026-04-26
-ctf_event: UMDCTF
+ctf_event: "UMDCTF 2026"
 challenge_name: oracle
 category: Reverse
 tags: [reverse-engineering, binary-analysis, cryptography]
